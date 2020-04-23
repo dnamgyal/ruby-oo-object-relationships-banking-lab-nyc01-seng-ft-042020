@@ -9,11 +9,11 @@ class Transfer
   end
 
   def valid?
-    @sender.valid? && @receiver.valid? 
+    @sender.valid? && @receiver.valid?
   end
 
   def execute_transaction
-    if valid? && @sender.balance > amount
+    if valid? && @sender.balance > amount  && @status == "pending"
       @sender.deposit(0 - amount)
       @receiver.deposit(amount)
       @status = "complete"
@@ -22,4 +22,14 @@ class Transfer
       "Transaction rejected. Please check your account balance."
     end
   end
+
+  def reverse_transfer
+    if valid? && @receiver.balance > amount && @status == "complete"
+   # if valid?
+      @receiver.deposit( 0 - amount)
+      @sender.deposit(amount)
+      @status = "reversed"
+    end
+  end
+
 end
